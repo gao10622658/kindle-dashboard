@@ -6,109 +6,89 @@
 <title>信息屏</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;transition:all .5s;min-height:100vh;overflow-x:hidden}
-.wrap{max-width:500px;margin:0 auto;padding:18px 20px}
-.card{border-radius:14px;padding:14px 16px;margin-bottom:10px}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:380px;margin:0 auto;padding:12px 14px}
+.card{border:2px solid #000;border-radius:8px;padding:12px 14px;margin-bottom:10px;background:#fff}
 .row{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:start;align-items:flex-start}
-.greet{font-size:13px;font-weight:600;margin-bottom:3px}
-.clock{font-size:56px;font-weight:800;letter-spacing:-3px;line-height:.85}
-.clock .sep{font-weight:200}
-.date{font-size:12px;margin-top:6px}
-.wx{text-align:right;cursor:pointer}
+.greet{font-size:14px;font-weight:700;margin-bottom:2px;color:#000}
+.clock{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:.85;color:#000}
+.clock .sep{font-weight:300}
+.date{font-size:13px;margin-top:4px;color:#000}
+.wx{text-align:right}
 .wx-icon{font-size:36px;font-weight:200;line-height:1}
-.wx-temp{font-size:24px;font-weight:700;line-height:1;margin-top:2px}
-.wx-info{font-size:10px;margin-top:3px}
-.wx-city{font-size:9px;margin-top:2px}
+.wx-temp{font-size:28px;font-weight:900;line-height:1;margin-top:2px;color:#000}
+.wx-info{font-size:11px;margin-top:3px;color:#000}
+.wx-city{font-size:10px;margin-top:2px;color:#333}
 .hdr{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;margin-bottom:8px}
-.hdr-title{font-size:14px;font-weight:700;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;gap:7px}
-.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
-.dot-on{background:#4c4;box-shadow:0 0 6px #4c4}
-.dot-off{background:#666}
-.btn-ico{background:none;border:none;cursor:pointer;font-size:12px;padding:4px}
-.tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;display:inline-block}
-.tag-mm{background:rgba(80,200,120,.13);color:#2a7}
-.tag-ds{background:rgba(80,140,255,.13);color:#36c}
-.sync-info{font-size:9px}
-.err{font-size:10px;color:#f66}
-.bar-wrap{height:5px;border-radius:3px;overflow:hidden;margin-bottom:6px}
-.bar{height:100%;border-radius:3px;transition:width .5s}
-.bar-label{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;margin-bottom:2px;font-size:11px}
-.bar-label b{font-weight:500}
-.bar-label .pct{font-weight:600}
+.hdr-title{font-size:15px;font-weight:800;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center}
+.hdr-title .dot{margin-right:6px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;border:2px solid #000}
+.dot-on{background:#000}
+.dot-off{background:#fff}
+.btn-ico{background:#fff;border:2px solid #000;border-radius:6px;cursor:pointer;font-size:13px;padding:4px 8px;font-weight:700}
+.tag{font-size:11px;font-weight:800;padding:2px 6px;border-radius:4px;display:inline-block;border:2px solid #000;background:#fff}
+.tag-mm{background:#000;color:#fff}
+.tag-ds{background:#000;color:#fff}
+.sync-info{font-size:10px;color:#333}
+.err{font-size:11px;color:#000;font-weight:700}
+.bar-wrap{height:8px;border-radius:4px;overflow:hidden;margin-bottom:6px;border:1px solid #000;background:#fff}
+.bar{height:100%;background:#000}
+.bar-label{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;margin-bottom:2px;font-size:12px}
+.bar-label b{font-weight:700}
+.bar-label .pct{font-weight:900}
 .bal-row{display:-webkit-box;display:flex;gap:6px;margin-bottom:6px}
-.bal-box{-webkit-box-flex:1;flex:1;padding:7px 9px;border-radius:8px}
-.bal-label{font-size:9px;margin-bottom:1px}
-.bal-val{font-size:14px;font-weight:700}
-.bal-val-sm{font-size:12px;font-weight:600}
-.stats-row{display:-webkit-box;display:flex;gap:10px;font-size:10px}
-.news-item{display:-webkit-box;display:flex;gap:8px;-webkit-box-align:center;align-items:center;padding:5px 0}
-.news-rank{width:20px;height:20px;border-radius:5px;-webkit-box-flex:0;flex-shrink:0;font-size:9px;font-weight:700;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center}
-.news-rank.top{color:#fff}
-.news-title{font-size:12px;-webkit-box-flex:1;flex:1;line-height:1.3;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.news-node{font-size:8px;-webkit-box-flex:0;flex-shrink:0;padding:1px 3px;border-radius:2px;border:1px solid}
-.news-replies{font-size:9px;-webkit-box-flex:0;flex-shrink:0;border-radius:3px;padding:1px 4px}
-.bar-row{display:-webkit-box;display:flex;gap:6px;-webkit-box-pack:center;justify-content:center;padding:4px 0 6px}
-.bar-btn{padding:7px 14px;border-radius:10px;border:none;cursor:pointer;font-size:11px;font-weight:600}
-.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;z-index:100}
-.modal{border-radius:18px;padding:24px 26px;width:380px;max-width:90vw;max-height:85vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
-.modal-hdr{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;margin-bottom:16px}
-.modal-title{font-size:18px;font-weight:700}
-.modal-close{background:none;border:none;cursor:pointer;font-size:18px}
+.bal-box{-webkit-box-flex:1;flex:1;padding:8px 10px;border-radius:6px;border:2px solid #000;background:#fff}
+.bal-label{font-size:10px;margin-bottom:1px;color:#333}
+.bal-val{font-size:16px;font-weight:900;color:#000}
+.bal-val-sm{font-size:13px;font-weight:700;color:#000}
+.stats-row{display:-webkit-box;display:flex;gap:10px;font-size:11px;color:#000}
+.news-item{display:-webkit-box;display:flex;gap:8px;-webkit-box-align:center;align-items:center;padding:6px 0;border-bottom:1px solid #ccc}
+.news-item:last-child{border-bottom:none}
+.news-rank{width:22px;height:22px;border-radius:4px;-webkit-box-flex:0;flex-shrink:0;font-size:10px;font-weight:900;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;border:2px solid #000;background:#fff;color:#000}
+.news-rank.top{background:#000;color:#fff}
+.news-title{font-size:13px;-webkit-box-flex:1;flex:1;line-height:1.3;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#000}
+.news-node{font-size:9px;-webkit-box-flex:0;flex-shrink:0;padding:1px 4px;border-radius:2px;border:1px solid #000;color:#333}
+.news-replies{font-size:10px;-webkit-box-flex:0;flex-shrink:0;color:#333}
+.bar-row{display:-webkit-box;display:flex;gap:8px;-webkit-box-pack:center;justify-content:center;padding:8px 0 6px}
+.bar-btn{padding:8px 16px;border-radius:8px;border:2px solid #000;cursor:pointer;font-size:12px;font-weight:700;background:#fff;color:#000}
+.bar-btn:active{background:#000;color:#fff}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;z-index:100}
+.modal{background:#fff;border:3px solid #000;border-radius:12px;padding:20px 22px;width:360px;max-width:92vw;max-height:85vh;overflow-y:auto}
+.modal-hdr{display:-webkit-box;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;margin-bottom:14px}
+.modal-title{font-size:18px;font-weight:900;color:#000}
+.modal-close{background:#fff;border:2px solid #000;border-radius:6px;cursor:pointer;font-size:16px;padding:2px 8px;font-weight:700}
 .field{margin-bottom:14px}
-.field-label{font-size:12px;font-weight:600;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;gap:5px;margin-bottom:6px}
-.field-input{width:100%;padding:9px 10px;border-radius:8px;border:2px solid;font-size:12px;font-family:monospace;outline:none}
-.field-hint{font-size:10px;margin-top:3px}
-.field-hint a{font-weight:500}
+.field-label{font-size:13px;font-weight:700;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;margin-bottom:6px;color:#000}
+.field-input{width:100%;padding:10px;border-radius:6px;border:2px solid #000;font-size:13px;font-family:monospace;outline:none;background:#fff}
+.field-hint{font-size:11px;margin-top:3px;color:#333}
 .modal-footer{display:-webkit-box;display:flex;gap:6px;-webkit-box-pack:end;justify-content:flex-end;margin-top:14px}
-.modal-btn{padding:8px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-weight:600;border:none}
-.sec-border{border:none;border-top:1px solid;margin:8px 0}
-.dark .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
-.dark .bar-wrap{background:rgba(255,255,255,.06)}
-.dark .bal-box{background:rgba(255,255,255,.04)}
-.dark .news-replies{background:rgba(255,255,255,.06)}
-.dark .bar-btn{background:rgba(255,255,255,.04);box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.dark .modal{background:#1a1a1a;border:1px solid rgba(255,255,255,.1)}
-.dark .field-input{background:#111;border-color:#333}
-.dark .sec-border{border-color:#333}
-.light .card{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5)}
-.light .bar-wrap{background:rgba(0,0,0,.06)}
-.light .bal-box{background:rgba(0,0,0,.03)}
-.light .news-replies{background:rgba(0,0,0,.04)}
-.light .bar-btn{background:rgba(255,255,255,.6);box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.light .modal{background:#fff;border:1px solid rgba(0,0,0,.08)}
-.light .field-input{background:#fafafa;border-color:#e0e0e0}
-.light .sec-border{border-color:#ddd}
-.light .news-node{border-color:#ddd}
-.dark .news-node{border-color:#333}
+.modal-btn{padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:700;border:2px solid #000;background:#fff;color:#000}
+.modal-btn-primary{background:#000;color:#fff}
+.modal-btn-danger{color:#000;border-color:#000}
+.sec-border{border:none;border-top:2px solid #000;margin:10px 0}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <div id="modal-root"></div>
 <script>
-// ── QR Code 内嵌（避免 CDN 依赖）──
-// 简易 QR 生成 - 使用 canvas
-var QRGen=(function(){
-  // 简化的 QR 码生成器
-  // 对于 Kindle，我们用 Google Chart API 的 fallback：显示链接让用户手动输入
-  function generate(container,text,size){
+// ── QR 生成（在线 API）──
+var QRGen={
+  generate:function(container,text,size){
     container.innerHTML='';
-    // 使用 canvas 方式
     var img=document.createElement('img');
-    img.src='https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(text);
+    img.src='https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(text)+'&color=000000&bgcolor=ffffff';
     img.width=size;img.height=size;
-    img.style.borderRadius='4px';
     img.onerror=function(){
-      container.innerHTML='<div style="font-size:10px;padding:10px;text-align:center;word-break:break-all;color:#999">请手动访问:<br><b>'+text+'</b></div>';
+      container.innerHTML='<div style="font-size:11px;padding:8px;text-align:center;word-break:break-all;color:#000;border:1px solid #000">手动访问:<br><b style="font-size:10px">'+text+'</b></div>';
     };
     container.appendChild(img);
   }
-  return{generate:generate};
-})();
+};
 
 // ── 状态 ──
 var S={
-  dark:(localStorage.getItem('kd-dark')!=='false'),
+  dark:false,
   mmKey:localStorage.getItem('kd-mm')||'',
   dsKey:localStorage.getItem('kd-ds')||'',
   mm:{ok:false,sync:'--',err:null,raw:null},
@@ -116,7 +96,7 @@ var S={
   stats:JSON.parse(localStorage.getItem('kd-stats')||'null')||{date:'',calls:0,tokens:0,cost:0},
   weather:{temp:0,humidity:0,code:0,wind:0,city:'',loaded:false},
   news:[],newsLoading:false,
-  syncing:false,cfgOpen:false,showPw:false
+  syncing:false,cfgOpen:false
 };
 var pairId=null,pairPoll=null;
 
@@ -126,33 +106,31 @@ var FALLBACK=[
   {title:'推荐一个免费的 API 测试工具',replies:89,node:'分享创造'},
   {title:'Rust 和 Go 到底该选哪个？',replies:312,node:'编程语言'},
   {title:'远程办公两年的一些心得',replies:198,node:'职场'},
-  {title:'自建 NAS 方案对比：黑群晖 vs TrueNAS',replies:167,node:'硬件'},
+  {title:'自建 NAS 方案对比',replies:167,node:'硬件'},
   {title:'为什么我从 VSCode 切换到 Neovim',replies:143,node:'编辑器'},
   {title:'小团队如何低成本搭建 CI/CD',replies:112,node:'开发'}
 ];
 
-// ── 工具 ──
 function today(){return new Date().toISOString().slice(0,10);}
 function pad(n){return n<10?'0'+n:''+n;}
 function greet(h){return h<6?'夜深了':h<9?'早上好':h<12?'上午好':h<14?'中午好':h<18?'下午好':'晚上好';}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-var WMO={0:['晴','晴夜','☀'],1:['少云','少云','🌤'],2:['多云','多云','⛅'],3:['阴','阴','☁'],
-  45:['雾','雾','🌫'],48:['霜雾','霜雾','🌫'],51:['小毛雨','小毛雨','🌦'],53:['毛雨','毛雨','🌦'],
-  55:['密毛雨','密毛雨','🌧'],61:['小雨','小雨','🌧'],63:['中雨','中雨','🌧'],65:['大雨','大雨','🌧'],
-  71:['小雪','小雪','🌨'],73:['中雪','中雪','🌨'],75:['大雪','大雪','❄'],80:['阵雨','阵雨','🌦'],
-  81:['中阵雨','中阵雨','🌧'],82:['大阵雨','大阵雨','⛈'],95:['雷阵雨','雷阵雨','⛈'],
-  96:['雷雹','雷雹','⛈'],99:['强雷雹','强雷雹','⛈']};
-function wmo(c,night){var w=WMO[c]||['未知','未知','🌡'];return{label:night?w[1]:w[0],icon:(night&&c<=2)?'☽':w[2]};}
+var WMO={0:['晴','晴夜','☀'],1:['少云','少云','☁'],2:['多云','多云','☁'],3:['阴','阴','☁'],
+  45:['雾','雾','≡'],48:['霜雾','霜雾','≡'],51:['小雨','小雨','~'],53:['雨','雨','~'],
+  55:['大雨','大雨','~'],61:['小雨','小雨','~'],63:['中雨','中雨','~'],65:['大雨','大雨','~'],
+  71:['小雪','小雪','*'],73:['中雪','中雪','*'],75:['大雪','大雪','*'],80:['阵雨','阵雨','~'],
+  81:['中阵雨','中阵雨','~'],82:['大阵雨','大阵雨','~'],95:['雷阵雨','雷阵雨','!'],
+  96:['雷雹','雷雹','!'],99:['强雷雹','强雷雹','!']};
+function wmo(c,night){var w=WMO[c]||['未知','未知','?'];return{label:night?w[1]:w[0],icon:w[2]};}
 
 function fmtMs(ms){
   var n=(typeof ms==='number')?ms:parseInt(ms);
   if(isNaN(n)||n<0)return'--';
   var sec=Math.floor(n/1000),d=Math.floor(sec/86400),h=Math.floor((sec%86400)/3600),m=Math.floor((sec%3600)/60);
-  if(d>0)return d+'天'+h+'小时';if(h>0)return h+'小时'+m+'分钟';return m+'分钟';
+  if(d>0)return d+'天'+h+'时';if(h>0)return h+'时'+m+'分';return m+'分';
 }
 
-// ── XHR 封装（兼容旧浏览器）──
 function xhr(url,opts,cb){
   if(typeof opts==='function'){cb=opts;opts={};}
   var x=new XMLHttpRequest();
@@ -165,7 +143,6 @@ function xhr(url,opts,cb){
   x.send(opts.body||null);
 }
 
-// ── API 调用 ──
 function fetchWeather(cb){
   var lat=39.9,lon=116.4,city='';
   xhr('https://ipapi.co/json/',function(err,r){
@@ -237,47 +214,39 @@ function syncDS(){
 
 function syncAll(){syncMM();syncDS();}
 
-// ── 渲染 ──
 function render(){
   var now=new Date(),H=now.getHours(),M=now.getMinutes(),Sec=now.getSeconds();
   var Y=now.getFullYear(),MO=now.getMonth()+1,D=now.getDate();
   var WD=['日','一','二','三','四','五','六'][now.getDay()];
   var night=H>=18||H<6;
-  var hue=H<6?240:H<9?30:H<12?45:H<18?200:260;
-  var dk=S.dark;
-  var grad=dk?'linear-gradient(160deg,hsl('+hue+',40%,10%),hsl('+(hue+30)+',30%,6%))':'linear-gradient(160deg,hsl('+hue+',25%,94%),hsl('+(hue+30)+',20%,90%))';
-  var fg=dk?'#eee':'#1a1a1a',fg2=dk?'#999':'#666',fg3=dk?'#555':'#bbb';
-  var acc=dk?'hsl('+hue+',70%,65%)':'hsl('+hue+',60%,45%)';
-  document.body.style.background=grad;document.body.style.color=fg;
-  document.body.className=dk?'dark':'light';
 
   var h='';
   // 时间+天气
-  var w=S.weather,wmoR=w.loaded?wmo(w.code,night):{label:'加载中',icon:'⏳'};
-  h+='<div class="card" style="padding:16px 18px 14px"><div class="row"><div>';
-  h+='<div class="greet" style="color:'+fg2+'">'+greet(H)+' · 星期'+WD+'</div>';
-  h+='<div class="clock" style="color:'+fg+'">'+pad(H)+'<span class="sep" style="color:'+fg3+'">:</span>'+pad(M)+'</div>';
-  h+='<div class="date" style="color:'+fg2+'">'+Y+'年'+MO+'月'+D+'日 · '+pad(Sec)+'秒</div>';
+  var w=S.weather,wmoR=w.loaded?wmo(w.code,night):{label:'...',icon:'?'};
+  h+='<div class="card"><div class="row"><div>';
+  h+='<div class="greet">'+greet(H)+' · 星期'+WD+'</div>';
+  h+='<div class="clock">'+pad(H)+'<span class="sep">:</span>'+pad(M)+'</div>';
+  h+='<div class="date">'+Y+'年'+MO+'月'+D+'日 · '+pad(Sec)+'秒</div>';
   h+='</div><div class="wx" onclick="fetchWeather(function(){render()})">';
   h+='<div class="wx-icon">'+wmoR.icon+'</div>';
-  h+='<div class="wx-temp" style="color:'+fg+'">'+(w.loaded?w.temp:'--')+'°</div>';
-  h+='<div class="wx-info" style="color:'+fg2+'">'+wmoR.label+(w.loaded?' · 湿度'+w.humidity+'%':'')+'</div>';
-  if(w.loaded&&w.city)h+='<div class="wx-city" style="color:'+fg3+'">'+esc(w.city)+' · 风'+w.wind+'km/h</div>';
+  h+='<div class="wx-temp">'+(w.loaded?w.temp:'--')+'°</div>';
+  h+='<div class="wx-info">'+wmoR.label+(w.loaded?' · 湿度'+w.humidity+'%':'')+'</div>';
+  if(w.loaded&&w.city)h+='<div class="wx-city">'+esc(w.city)+' · 风'+w.wind+'</div>';
   h+='</div></div></div>';
 
   // 用量监控
   var hasKey=S.mmKey||S.dsKey;
   if(hasKey){
     var mmOk=S.mm.ok,dsOk=S.ds.ok;
-    h+='<div class="card"><div class="hdr"><div class="hdr-title">用量监控 <span class="dot '+(mmOk||dsOk?'dot-on':'dot-off')+'"></span></div>';
-    h+='<div><button class="btn-ico" style="color:'+fg2+'" onclick="openCfg()">⚙</button> ';
-    h+='<button class="btn-ico" style="color:'+fg2+'" onclick="syncAll()" '+(S.syncing?'disabled':'')+'>↻</button></div></div>';
+    h+='<div class="card"><div class="hdr"><div class="hdr-title"><span class="dot '+(mmOk||dsOk?'dot-on':'dot-off')+'"></span> 用量监控</div>';
+    h+='<div><button class="btn-ico" onclick="openCfg()">⚙</button> ';
+    h+='<button class="btn-ico" onclick="syncAll()" '+(S.syncing?'disabled':'')+'>↻</button></div></div>';
     if(S.mmKey){
-      h+='<div style="'+(S.dsKey?'margin-bottom:10px':'')+'">';
-      h+='<div style="display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;gap:5px;margin-bottom:6px">';
-      h+='<span class="tag tag-mm" style="'+(dk?'color:#5c8;background:rgba(80,200,120,.15)':'')+'">MiniMax</span>';
-      if(S.mm.err)h+='<span class="err">✗ '+S.mm.err+'</span>';
-      if(mmOk&&!S.mm.err)h+='<span class="sync-info" style="color:'+fg3+'">同步 '+S.mm.sync+'</span>';
+      h+='<div style="'+(S.dsKey?'margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #ccc':'')+'">';
+      h+='<div style="display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;margin-bottom:6px">';
+      h+='<span class="tag tag-mm">MM</span>';
+      if(S.mm.err)h+=' <span class="err">✗ '+S.mm.err+'</span>';
+      if(mmOk&&!S.mm.err)h+=' <span class="sync-info">'+S.mm.sync+'</span>';
       h+='</div>';
       if(mmOk&&S.mm.raw&&S.mm.raw.model_remains){
         var g=null;
@@ -286,27 +255,27 @@ function render(){
         var h5=100-(g.current_interval_remaining_percent||0),wk=100-(g.current_weekly_remaining_percent||0);
         var bars=[{l:'5h 限额',p:h5,r:fmtMs(g.remains_time)},{l:'周限额',p:wk,r:fmtMs(g.weekly_remains_time)}];
         for(var bi=0;bi<bars.length;bi++){var b=bars[bi];
-          h+='<div class="bar-label"><b style="color:'+fg+'">'+b.l+' <span style="font-size:9px;font-weight:400;color:'+fg3+'">'+b.r+'后重置</span></b><span class="pct" style="color:'+acc+'">'+Math.round(b.p)+'%</span></div>';
-          h+='<div class="bar-wrap"><div class="bar" style="width:'+b.p+'%;background:'+acc+'"></div></div>';
+          h+='<div class="bar-label"><b>'+b.l+' <span style="font-size:10px;font-weight:400;color:#333">'+b.r+'后重置</span></b><span class="pct">'+Math.round(b.p)+'%</span></div>';
+          h+='<div class="bar-wrap"><div class="bar" style="width:'+b.p+'%"></div></div>';
         }
       }
       h+='</div>';
     }
     if(S.dsKey){
-      h+='<div><div style="display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;gap:5px;margin-bottom:6px">';
-      h+='<span class="tag tag-ds" style="'+(dk?'color:#7af;background:rgba(80,140,255,.15)':'')+'">DeepSeek</span>';
-      if(S.ds.err)h+='<span class="err">✗ '+S.ds.err+'</span>';
+      h+='<div><div style="display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;margin-bottom:6px">';
+      h+='<span class="tag tag-ds">DS</span>';
+      if(S.ds.err)h+=' <span class="err">✗ '+S.ds.err+'</span>';
       h+='</div>';
       if(S.ds.ok){
         h+='<div class="bal-row">';
-        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">总余额</div><div class="bal-val" style="color:'+fg+'">¥'+parseFloat(S.ds.total).toFixed(2)+'</div></div>';
-        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">赠送</div><div class="bal-val-sm" style="color:'+(dk?'#7af':'#36c')+'">¥'+parseFloat(S.ds.granted).toFixed(2)+'</div></div>';
-        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">充值</div><div class="bal-val-sm" style="color:'+fg2+'">¥'+parseFloat(S.ds.topped).toFixed(2)+'</div></div>';
+        h+='<div class="bal-box"><div class="bal-label">总余额</div><div class="bal-val">'+parseFloat(S.ds.total).toFixed(2)+'</div></div>';
+        h+='<div class="bal-box"><div class="bal-label">赠送</div><div class="bal-val-sm">'+parseFloat(S.ds.granted).toFixed(2)+'</div></div>';
+        h+='<div class="bal-box"><div class="bal-label">充值</div><div class="bal-val-sm">'+parseFloat(S.ds.topped).toFixed(2)+'</div></div>';
         h+='</div>';
         var st=S.stats.date===today()?S.stats:{calls:0,tokens:0,cost:0};
-        h+='<div class="stats-row" style="color:'+fg2+'"><span>今日 <b style="color:'+fg+'">'+st.calls+'</b> 次调用</span>';
-        if(st.tokens>0){h+='<span>Token <b style="color:'+fg+'">'+(st.tokens>1000?(st.tokens/1000).toFixed(1)+'k':st.tokens)+'</b></span><span>预估 <b style="color:'+(dk?'#7af':'#36c')+'">¥'+st.cost.toFixed(4)+'</b></span>';}
-        else{h+='<span style="font-size:9px;color:'+fg3+'">AI调用将自动统计Token</span>';}
+        h+='<div class="stats-row"><span>今日 <b>'+st.calls+'</b> 次</span>';
+        if(st.tokens>0){h+='<span>Token <b>'+(st.tokens>1000?(st.tokens/1000).toFixed(1)+'k':st.tokens)+'</b></span><span>¥'+st.cost.toFixed(4)+'</span>';}
+        else{h+='<span style="font-size:10px;color:#333">AI调用自动统计</span>';}
         h+='</div>';
       }
       h+='</div>';
@@ -316,24 +285,23 @@ function render(){
 
   // 技术热榜
   var news=S.news.length?S.news:FALLBACK;
-  h+='<div class="card"><div class="hdr"><div class="hdr-title">技术热榜 <span style="font-size:10px;font-weight:400;color:'+fg2+'">V2EX</span></div>';
-  h+='<button class="btn-ico" style="color:'+fg2+';width:26px;height:26px;border-radius:6px;background:'+(dk?'rgba(255,255,255,.08)':'rgba(0,0,0,.05)')+';font-size:13px" onclick="fetchNews()" '+(S.newsLoading?'disabled':'')+'>↻</button></div>';
+  h+='<div class="card"><div class="hdr"><div class="hdr-title">技术热榜 <span style="font-size:11px;font-weight:400;color:#333;margin-left:6px">V2EX</span></div>';
+  h+='<button class="btn-ico" onclick="fetchNews()" '+(S.newsLoading?'disabled':'')+'>↻</button></div>';
   for(var ni=0;ni<news.length;ni++){var n=news[ni];
     var top=ni<3;
     h+='<div class="news-item">';
-    h+='<span class="news-rank'+(top?' top':'')+'" style="background:'+(top?acc:(dk?'rgba(255,255,255,.06)':'rgba(0,0,0,.04)'))+';color:'+(top?'#fff':fg2)+'">'+(ni+1)+'</span>';
-    h+='<span class="news-title" style="color:'+fg+'">'+esc(n.title)+'</span>';
-    if(n.node)h+='<span class="news-node" style="color:'+fg3+'">'+esc(n.node)+'</span>';
-    h+='<span class="news-replies" style="color:'+fg2+'">'+n.replies+'回复</span>';
+    h+='<span class="news-rank'+(top?' top':'')+'">'+(ni+1)+'</span>';
+    h+='<span class="news-title">'+esc(n.title)+'</span>';
+    if(n.node)h+='<span class="news-node">'+esc(n.node)+'</span>';
+    h+='<span class="news-replies">'+n.replies+'</span>';
     h+='</div>';
   }
   h+='</div>';
 
   // 底部栏
   h+='<div class="bar-row">';
-  h+='<button class="bar-btn" style="color:'+fg+'" onclick="toggleDark()">'+(dk?'☀ 日间':'☾ 夜间')+'</button>';
-  h+='<button class="bar-btn" style="color:'+fg+'" onclick="fetchNews()">↻ 刷新</button>';
-  h+='<button class="bar-btn" style="color:'+fg+'" onclick="openCfg()">⚙ 设置</button>';
+  h+='<button class="bar-btn" onclick="fetchNews()">↻ 刷新</button>';
+  h+='<button class="bar-btn" onclick="openCfg()">⚙ 设置</button>';
   h+='</div>';
 
   document.getElementById('app').innerHTML=h;
@@ -342,45 +310,41 @@ function render(){
 
 function renderModal(){
   if(!S.cfgOpen){document.getElementById('modal-root').innerHTML='';return;}
-  var dk=S.dark,fg=dk?'#eee':'#1a1a1a',fg2=dk?'#999':'#666',fg3=dk?'#555':'#bbb';
-  var acc=dk?'hsl(200,70%,65%)':'hsl(200,60%,45%)';
   var mmVal='',dsVal='';
   var mmEl=document.getElementById('mm-input'),dsEl=document.getElementById('ds-input');
   if(mmEl)mmVal=mmEl.value;if(dsEl)dsVal=dsEl.value;
   if(!mmVal)mmVal=S.mmKey;if(!dsVal)dsVal=S.dsKey;
 
   var h='<div class="overlay" onclick="if(event.target===this)closeCfg()"><div class="modal">';
-  h+='<div class="modal-hdr"><span class="modal-title" style="color:'+fg+'">API 密钥设置</span>';
-  h+='<button class="modal-close" style="color:'+fg2+'" onclick="closeCfg()">✕</button></div>';
-  h+='<div class="field"><label class="field-label" style="color:'+fg2+'"><span class="tag tag-mm" style="'+(dk?'color:#5c8;background:rgba(80,200,120,.15)':'')+'">MiniMax</span> Token Plan 密钥</label>';
-  h+='<input class="field-input" type="'+(S.showPw?'text':'password')+'" id="mm-input" value="'+esc(mmVal)+'" placeholder="输入 MiniMax 密钥...">';
-  h+='<div class="field-hint" style="color:'+fg3+'">MiniMax 控制台 → Token Plan</div></div>';
-  h+='<div class="field"><label class="field-label" style="color:'+fg2+'"><span class="tag tag-ds" style="'+(dk?'color:#7af;background:rgba(80,140,255,.15)':'')+'">DeepSeek</span> API 密钥</label>';
-  h+='<input class="field-input" type="'+(S.showPw?'text':'password')+'" id="ds-input" value="'+esc(dsVal)+'" placeholder="输入 DeepSeek 密钥...">';
-  h+='<div class="field-hint" style="color:'+fg3+'">DeepSeek 开放平台 → API Keys</div></div>';
-  h+='<div style="font-size:10px;color:'+fg3+';margin-bottom:12px">密钥仅存储在浏览器本地</div>';
+  h+='<div class="modal-hdr"><span class="modal-title">API 密钥设置</span>';
+  h+='<button class="modal-close" onclick="closeCfg()">✕</button></div>';
+  h+='<div class="field"><label class="field-label"><span class="tag tag-mm" style="margin-right:5px">MM</span> Token Plan 密钥</label>';
+  h+='<input class="field-input" type="password" id="mm-input" value="'+esc(mmVal)+'" placeholder="输入 MiniMax 密钥...">';
+  h+='<div class="field-hint">MiniMax 控制台 → Token Plan</div></div>';
+  h+='<div class="field"><label class="field-label"><span class="tag tag-ds" style="margin-right:5px">DS</span> API 密钥</label>';
+  h+='<input class="field-input" type="password" id="ds-input" value="'+esc(dsVal)+'" placeholder="输入 DeepSeek 密钥...">';
+  h+='<div class="field-hint">DeepSeek 开放平台 → API Keys</div></div>';
+  h+='<div style="font-size:11px;color:#333;margin-bottom:10px">密钥仅存储在浏览器本地</div>';
   h+='<hr class="sec-border">';
   h+='<div style="text-align:center;margin-bottom:12px">';
-  h+='<div style="font-size:12px;font-weight:600;color:'+fg2+';margin-bottom:8px">手机扫码输入密钥</div>';
+  h+='<div style="font-size:13px;font-weight:700;margin-bottom:8px">手机扫码输入密钥</div>';
   h+='<div style="display:-webkit-box;display:flex;-webkit-box-pack:center;justify-content:center;-webkit-box-align:center;align-items:center;gap:16px">';
-  h+='<div id="qr-box" style="border-radius:8px;overflow:hidden;padding:6px;background:'+(dk?'#222':'#fff')+'"></div>';
+  h+='<div id="qr-box" style="border-radius:6px;overflow:hidden;padding:4px;border:2px solid #000;background:#fff"></div>';
   h+='<div style="text-align:left">';
-  h+='<div style="font-size:10px;color:'+fg3+';margin-bottom:4px">配对码</div>';
-  h+='<div id="pair-code" style="font-size:22px;font-weight:800;letter-spacing:3px;color:'+fg+';font-family:monospace">------</div>';
-  h+='<div style="font-size:10px;color:'+fg3+';margin-top:6px;line-height:1.6">手机扫码后<br>在手机上输入密钥<br>Kindle 自动接收</div>';
-  h+='<button onclick="showPairQR()" style="margin-top:8px;padding:5px 12px;border-radius:6px;border:1px solid '+(dk?'#444':'#ddd')+';background:transparent;color:'+fg2+';font-size:11px;cursor:pointer">'+(pairId?'重新生成':'生成二维码')+'</button>';
+  h+='<div style="font-size:11px;color:#333;margin-bottom:4px">配对码</div>';
+  h+='<div id="pair-code" style="font-size:24px;font-weight:900;letter-spacing:3px;color:#000;font-family:monospace">------</div>';
+  h+='<div style="font-size:11px;color:#333;margin-top:6px;line-height:1.6">手机扫码<br>输入密钥<br>Kindle 自动接收</div>';
+  h+='<button class="btn-ico" onclick="showPairQR()" style="margin-top:8px">'+(pairId?'重新生成':'生成二维码')+'</button>';
   h+='</div></div></div>';
   h+='<div class="modal-footer">';
-  if(S.mmKey||S.dsKey)h+='<button class="modal-btn" style="border:1px solid #e44;background:transparent;color:#e44" onclick="clearAll()">全部清除</button>';
-  h+='<button class="modal-btn" style="border:1px solid '+(dk?'#333':'#ddd')+';background:transparent;color:'+fg+'" onclick="closeCfg()">取消</button>';
-  h+='<button class="modal-btn" style="background:'+acc+';color:#fff" onclick="saveKeys()">保存并验证</button>';
+  if(S.mmKey||S.dsKey)h+='<button class="modal-btn modal-btn-danger" onclick="clearAll()">清除</button>';
+  h+='<button class="modal-btn" onclick="closeCfg()">取消</button>';
+  h+='<button class="modal-btn modal-btn-primary" onclick="saveKeys()">保存</button>';
   h+='</div></div></div>';
   document.getElementById('modal-root').innerHTML=h;
   showPairQR();
 }
 
-// ── 交互 ──
-function toggleDark(){S.dark=!S.dark;localStorage.setItem('kd-dark',S.dark);render();}
 function openCfg(){S.cfgOpen=true;renderModal();}
 function closeCfg(){S.cfgOpen=false;if(pairPoll){clearInterval(pairPoll);pairPoll=null;pairId=null;}renderModal();}
 function saveKeys(){
@@ -402,10 +366,9 @@ function showPairQR(){
   var qrDiv=document.getElementById('qr-box');
   var codeEl=document.getElementById('pair-code');
   if(!qrDiv)return;
-  qrDiv.innerHTML='<div style="font-size:11px;padding:40px 10px;text-align:center;color:#999">生成中...</div>';
+  qrDiv.innerHTML='<div style="font-size:11px;padding:30px 8px;text-align:center;color:#000">...</div>';
   var blobId=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
   pairId=blobId;
-  // 尝试创建 jsonblob
   xhr('https://jsonblob.com/api/jsonBlob',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:'{}'},function(err,r){
     if(!err&&r&&r.status>=200&&r.status<300){
       var loc=r.getResponseHeader('Location')||'';
@@ -414,7 +377,7 @@ function showPairQR(){
     }
     var finalUrl=getPageUrl()+'?pair='+pairId;
     qrDiv.innerHTML='';
-    QRGen.generate(qrDiv,finalUrl,140);
+    QRGen.generate(qrDiv,finalUrl,130);
     var short=pairId.slice(-6).toUpperCase();
     if(codeEl)codeEl.textContent=short;
     if(pairPoll)clearInterval(pairPoll);
@@ -434,41 +397,37 @@ function pollPair(){
   });
 }
 
-// ── 手机端输入模式 ──
 function checkPairMode(){
   var search=location.search||'';
   var match=search.match(/[?&]pair=([^&]+)/);
   if(!match)return false;
   var pid=decodeURIComponent(match[1]);
-  document.body.innerHTML='<div style="max-width:400px;margin:40px auto;padding:20px;font-family:-apple-system,sans-serif">'
-    +'<h2 style="margin-bottom:6px">📱 扫码输入密钥</h2>'
-    +'<p style="color:#666;font-size:13px;margin-bottom:24px">在此输入 API 密钥，Kindle 将自动接收</p>'
-    +'<div style="margin-bottom:16px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#555">'
-    +'<span style="padding:1px 6px;border-radius:4px;background:rgba(80,200,120,.12);font-size:11px;font-weight:700;color:#2a7;margin-right:4px">MiniMax</span>密钥</label>'
-    +'<input id="m-mm" type="text" placeholder="输入 MiniMax 密钥（可留空）" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:monospace;outline:none"></div>'
-    +'<div style="margin-bottom:20px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#555">'
-    +'<span style="padding:1px 6px;border-radius:4px;background:rgba(80,140,255,.12);font-size:11px;font-weight:700;color:#36c;margin-right:4px">DeepSeek</span>密钥</label>'
-    +'<input id="m-ds" type="text" placeholder="输入 DeepSeek 密钥（可留空）" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:monospace;outline:none"></div>'
-    +'<button id="m-send" onclick="sendKeys(\''+pid+'\')" style="width:100%;padding:14px;border-radius:12px;border:none;background:#2563eb;color:#fff;font-size:15px;font-weight:700;cursor:pointer">发送到 Kindle</button>'
-    +'<div id="m-status" style="margin-top:16px;text-align:center;font-size:13px;color:#666"></div></div>';
+  document.body.innerHTML='<div style="max-width:400px;margin:40px auto;padding:20px;font-family:-apple-system,sans-serif;background:#fff;color:#000">'
+    +'<h2 style="margin-bottom:6px;color:#000">📱 扫码输入密钥</h2>'
+    +'<p style="color:#333;font-size:14px;margin-bottom:24px">输入 API 密钥，Kindle 自动接收</p>'
+    +'<div style="margin-bottom:16px"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;color:#000">MiniMax 密钥</label>'
+    +'<input id="m-mm" type="text" placeholder="可留空" style="width:100%;padding:12px;border:2px solid #000;border-radius:8px;font-size:14px;font-family:monospace"></div>'
+    +'<div style="margin-bottom:20px"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;color:#000">DeepSeek 密钥</label>'
+    +'<input id="m-ds" type="text" placeholder="可留空" style="width:100%;padding:12px;border:2px solid #000;border-radius:8px;font-size:14px;font-family:monospace"></div>'
+    +'<button id="m-send" onclick="sendKeys(\''+pid+'\')" style="width:100%;padding:14px;border-radius:10px;border:2px solid #000;background:#000;color:#fff;font-size:16px;font-weight:700;cursor:pointer">发送到 Kindle</button>'
+    +'<div id="m-status" style="margin-top:16px;text-align:center;font-size:14px;color:#000"></div></div>';
   return true;
 }
 
 function sendKeys(pid){
   var mmEl=document.getElementById('m-mm'),dsEl=document.getElementById('m-ds');
   var mm=mmEl?(mmEl.value.replace(/^\s+|\s+$/g,'')):'',ds=dsEl?(dsEl.value.replace(/^\s+|\s+$/g,'')):'';
-  if(!mm&&!ds){document.getElementById('m-status').innerHTML='<span style="color:#f66">请至少输入一个密钥</span>';return;}
+  if(!mm&&!ds){document.getElementById('m-status').innerHTML='<span style="color:#000;font-weight:700">请至少输入一个密钥</span>';return;}
   var btn=document.getElementById('m-send');btn.disabled=true;btn.textContent='发送中...';
   xhr('https://jsonblob.com/api/jsonBlob/'+pid,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({mm:mm,ds:ds})},function(err,r){
     if(!err&&r&&r.status>=200&&r.status<300){
-      document.getElementById('m-status').innerHTML='<span style="color:#2a7;font-size:16px;font-weight:700">✓ 发送成功！</span><br><span style="font-size:12px">Kindle 将在几秒内自动接收</span>';
+      document.getElementById('m-status').innerHTML='<span style="font-size:18px;font-weight:900">✓ 发送成功！</span><br><span style="font-size:13px">Kindle 将自动接收</span>';
     }else{
-      document.getElementById('m-status').innerHTML='<span style="color:#f66">发送失败，请重试</span>';btn.disabled=false;btn.textContent='发送到 Kindle';
+      document.getElementById('m-status').innerHTML='<span style="font-weight:700">发送失败，请重试</span>';btn.disabled=false;btn.textContent='发送到 Kindle';
     }
   });
 }
 
-// ── 初始化 ──
 if(!checkPairMode()){
   render();
   fetchWeather(function(){render();});
