@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>信息屏</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;transition:all .5s;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:500px;margin:0 auto;padding:18px 20px}
+.card{border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:flex-start}
+.greet{font-size:13px;font-weight:600;margin-bottom:3px}
+.clock{font-size:56px;font-weight:800;letter-spacing:-3px;line-height:.85;font-variant-numeric:tabular-nums}
+.clock .sep{font-weight:200}
+.date{font-size:12px;margin-top:6px}
+.wx{text-align:right;cursor:pointer}
+.wx-icon{font-size:36px;font-weight:200;line-height:1}
+.wx-temp{font-size:24px;font-weight:700;line-height:1;margin-top:2px}
+.wx-info{font-size:10px;margin-top:3px}
+.wx-city{font-size:9px;margin-top:2px}
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hdr-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dot-on{background:#4c4;box-shadow:0 0 6px #4c4;animation:pulse 2s infinite}
+.dot-off{background:#666}
+.btn-ico{background:none;border:none;cursor:pointer;font-size:12px;padding:4px}
+.tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;display:inline-block}
+.tag-mm{background:rgba(80,200,120,.13);color:#2a7}
+.tag-ds{background:rgba(80,140,255,.13);color:#36c}
+.sync-info{font-size:9px}
+.err{font-size:10px;color:#f66}
+.bar-wrap{height:5px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.bar{height:100%;border-radius:3px;transition:width .5s}
+.bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;font-size:11px}
+.bar-label b{font-weight:500}
+.bar-label .pct{font-weight:600}
+.bal-row{display:flex;gap:6px;margin-bottom:6px}
+.bal-box{flex:1;padding:7px 9px;border-radius:8px}
+.bal-label{font-size:9px;margin-bottom:1px}
+.bal-val{font-size:14px;font-weight:700}
+.bal-val-sm{font-size:12px;font-weight:600}
+.stats-row{display:flex;gap:10px;font-size:10px}
+.news-item{display:flex;gap:8px;align-items:center;padding:5px 0}
+.news-rank{width:20px;height:20px;border-radius:5px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.news-rank.top{color:#fff}
+.news-title{font-size:12px;flex:1;line-height:1.3;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.news-node{font-size:8px;flex-shrink:0;padding:1px 3px;border-radius:2px;border:1px solid}
+.news-replies{font-size:9px;flex-shrink:0;border-radius:3px;padding:1px 4px}
+.bar-row{display:flex;gap:6px;justify-content:center;padding:4px 0 6px}
+.bar-btn{padding:7px 14px;border-radius:10px;border:none;cursor:pointer;font-size:11px;font-weight:600}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100}
+.modal{border-radius:18px;padding:24px 26px;width:380px;max-width:90vw;max-height:85vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;cursor:pointer;font-size:18px}
+.field{margin-bottom:14px}
+.field-label{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.field-input{width:100%;padding:9px 10px;border-radius:8px;border:2px solid;font-size:12px;font-family:monospace;outline:none}
+.field-hint{font-size:10px;margin-top:3px}
+.field-hint a{font-weight:500}
+.modal-footer{display:flex;gap:6px;justify-content:flex-end;margin-top:14px}
+.modal-btn{padding:8px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-weight:600;border:none}
+.sec-border{border:none;border-top:1px solid;margin:8px 0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.dark .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.dark .bar-wrap{background:rgba(255,255,255,.06)}
+.dark .bal-box{background:rgba(255,255,255,.04)}
+.dark .news-replies{background:rgba(255,255,255,.06)}
+.dark .bar-btn{background:rgba(255,255,255,.04);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.dark .modal{background:#1a1a1a;border:1px solid rgba(255,255,255,.1)}
+.dark .field-input{background:#111;border-color:#333}
+.dark .sec-border{border-color:#333}
+.light .card{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5)}
+.light .bar-wrap{background:rgba(0,0,0,.06)}
+.light .bal-box{background:rgba(0,0,0,.03)}
+.light .news-replies{background:rgba(0,0,0,.04)}
+.light .bar-btn{background:rgba(255,255,255,.6);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.light .modal{background:#fff;border:1px solid rgba(0,0,0,.08)}
+.light .field-input{background:#fafafa;border-color:#e0e0e0}
+.light .sec-border{border-color:#ddd}
+.light .news-node{border-color:#ddd}
+.dark .news-node{border-color:#333}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div id="modal-root"></div>
+<script>
+// ── 状态 ──
+const S={
+  dark:localStorage.getItem('kd-dark')!=='false',
+  mmKey:localStorage.getItem('kd-mm')||'',
+  dsKey:localStorage.getItem('kd-ds')||'',
+  mm:{ok:false,sync:'--',err:null,raw:null},
+  ds:{ok:false,total:'0',granted:'0',topped:'0',err:null},
+  stats:JSON.parse(localStorage.getItem('kd-stats')||'null')||{date:'',calls:0,tokens:0,cost:0},
+  weather:{temp:0,humidity:0,code:0,wind:0,city:'',loaded:false},
+  news:[],newsLoading:false,
+  syncing:false,cfgOpen:false,showPw:false
+};
+const today=()=>new Date().toISOString().slice(0,10);
+const pad=n=>n<10?'0'+n:''+n;
+const greet=h=>h<6?'夜深了':h<9?'早上好':h<12?'上午好':h<14?'中午好':h<18?'下午好':'晚上好';
+
+// WMO
+const WMO={0:['晴','晴夜','☀'],1:['少云','少云','🌤'],2:['多云','多云','⛅'],3:['阴','阴','☁'],
+  45:['雾','雾','🌫'],48:['霜雾','霜雾','🌫'],51:['小毛雨','小毛雨','🌦'],53:['毛雨','毛雨','🌦'],
+  55:['密毛雨','密毛雨','🌧'],61:['小雨','小雨','🌧'],63:['中雨','中雨','🌧'],65:['大雨','大雨','🌧'],
+  71:['小雪','小雪','🌨'],73:['中雪','中雪','🌨'],75:['大雪','大雪','❄'],80:['阵雨','阵雨','🌦'],
+  81:['中阵雨','中阵雨','🌧'],82:['大阵雨','大阵雨','⛈'],95:['雷阵雨','雷阵雨','⛈'],
+  96:['雷阵雨+雹','雷阵雨+雹','⛈'],99:['强雷雹','强雷雹','⛈']};
+function wmo(c,night){const w=WMO[c]||['未知','未知','🌡'];return{label:night?w[1]:w[0],icon:night&&c<=2?'☽':w[2]};}
+
+const FALLBACK=[
+  {title:'大家平时用什么工具管理待办事项？',replies:128,node:'分享发现'},
+  {title:'程序员副业做什么比较靠谱',replies:256,node:'职场'},
+  {title:'推荐一个免费的 API 测试工具',replies:89,node:'分享创造'},
+  {title:'Rust 和 Go 到底该选哪个？',replies:312,node:'编程语言'},
+  {title:'远程办公两年的一些心得',replies:198,node:'职场'},
+  {title:'自建 NAS 方案对比：黑群晖 vs TrueNAS',replies:167,node:'硬件'},
+  {title:'为什么我从 VSCode 切换到 Neovim',replies:143,node:'编辑器'},
+  {title:'小团队如何低成本搭建 CI/CD',replies:112,node:'开发'},
+];
+
+// ── API 调用 ──
+async function fetchWeather(){
+  try{
+    let lat=39.9,lon=116.4,city='';
+    try{const g=await fetch('https://ipapi.co/json/');if(g.ok){const d=await g.json();lat=d.latitude||lat;lon=d.longitude||lon;city=d.city||'';}}catch{}
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m');
+    if(!r.ok)return;const d=await r.json();
+    S.weather={temp:Math.round(d.current?.temperature_2m||0),humidity:d.current?.relative_humidity_2m||0,code:d.current?.weather_code||0,wind:Math.round(d.current?.wind_speed_10m||0),city,loaded:true};
+  }catch{}
+}
+async function fetchNews(){
+  S.newsLoading=true;render();
+  try{const r=await fetch('https://www.v2ex.com/api/topics/hot.json');const d=await r.json();
+    if(Array.isArray(d)&&d.length>=3)S.news=d.slice(0,8).map(i=>({title:i.title,replies:i.replies||0,node:i.node?.title||''}));
+    else S.news=FALLBACK;
+  }catch{S.news=FALLBACK;}
+  S.newsLoading=false;render();
+}
+function track(tokens=0,costPer1M=4){
+  const d=today();
+  if(S.stats.date!==d)S.stats={date:d,calls:0,tokens:0,cost:0};
+  S.stats.calls++;S.stats.tokens+=tokens;S.stats.cost+=(tokens/1e6)*costPer1M;
+  localStorage.setItem('kd-stats',JSON.stringify(S.stats));
+}
+async function syncMM(){
+  if(!S.mmKey)return;S.syncing=true;render();track();
+  try{
+    const r=await fetch('https://api.minimaxi.com/v1/models',{headers:{'Authorization':'Bearer '+S.mmKey}});
+    if(!r.ok){S.mm={ok:false,sync:'--',err:r.status===401?'密钥无效':'错误 '+r.status,raw:null};S.syncing=false;render();return;}
+    const now=new Date();S.mm.ok=true;S.mm.sync=pad(now.getHours())+':'+pad(now.getMinutes());S.mm.err=null;
+    try{const ur=await fetch('https://www.minimaxi.com/v1/token_plan/remains',{headers:{'Authorization':'Bearer '+S.mmKey,'Content-Type':'application/json'}});
+      if(ur.ok){S.mm.raw=await ur.json();}}catch{}
+  }catch{S.mm={ok:false,sync:'--',err:'网络异常',raw:null};}
+  S.syncing=false;render();
+}
+async function syncDS(){
+  if(!S.dsKey)return;track(0,4);
+  try{
+    const r=await fetch('https://api.deepseek.com/user/balance',{headers:{'Authorization':'Bearer '+S.dsKey}});
+    if(!r.ok){S.ds={ok:false,total:'0',granted:'0',topped:'0',err:r.status===401?'密钥无效':'错误 '+r.status};render();return;}
+    const d=await r.json();const info=d.balance_infos?.[0]||{};
+    S.ds={ok:d.is_available!==false,total:info.total_balance||'0',granted:info.granted_balance||'0',topped:info.topped_up_balance||'0',err:null};
+  }catch{S.ds.err='网络异常';}
+  render();
+}
+function syncAll(){syncMM();syncDS();}
+
+// ── 工具函数 ──
+function fmtMs(ms){const n=typeof ms==='number'?ms:parseInt(ms);if(isNaN(n)||n<0)return'--';
+  const sec=Math.floor(n/1000),d=Math.floor(sec/86400),h=Math.floor((sec%86400)/3600),m=Math.floor((sec%3600)/60);
+  if(d>0)return d+'天'+h+'小时';if(h>0)return h+'小时'+m+'分钟';return m+'分钟';}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── 渲染 ──
+function render(){
+  const now=new Date(),H=now.getHours(),M=now.getMinutes(),Sec=now.getSeconds();
+  const Y=now.getFullYear(),MO=now.getMonth()+1,D=now.getDate();
+  const WD=['日','一','二','三','四','五','六'][now.getDay()];
+  const night=H>=18||H<6;
+  const hue=H<6?240:H<9?30:H<12?45:H<18?200:260;
+  const dk=S.dark;
+  const grad=dk?'linear-gradient(160deg,hsl('+hue+',40%,10%),hsl('+(hue+30)+',30%,6%))':'linear-gradient(160deg,hsl('+hue+',25%,94%),hsl('+(hue+30)+',20%,90%))';
+  const fg=dk?'#eee':'#1a1a1a',fg2=dk?'#999':'#666',fg3=dk?'#555':'#bbb';
+  const acc=dk?'hsl('+hue+',70%,65%)':'hsl('+hue+',60%,45%)';
+  document.body.style.background=grad;document.body.style.color=fg;
+  document.body.className=dk?'dark':'light';
+
+  let h='';
+  // 时间+天气
+  const w=S.weather,wmoR=w.loaded?wmo(w.code,night):{label:'加载中',icon:'⏳'};
+  h+='<div class="card" style="padding:16px 18px 14px"><div class="row"><div>';
+  h+='<div class="greet" style="color:'+fg2+'">'+greet(H)+' · 星期'+WD+'</div>';
+  h+='<div class="clock" style="color:'+fg+'">'+pad(H)+'<span class="sep" style="color:'+fg3+'">:</span>'+pad(M)+'</div>';
+  h+='<div class="date" style="color:'+fg2+'">'+Y+'年'+MO+'月'+D+'日 · '+pad(Sec)+'秒</div>';
+  h+='</div><div class="wx" onclick="fetchWeather().then(()=>render())">';
+  h+='<div class="wx-icon">'+wmoR.icon+'</div>';
+  h+='<div class="wx-temp" style="color:'+fg+'">'+(w.loaded?w.temp:'--')+'°</div>';
+  h+='<div class="wx-info" style="color:'+fg2+'">'+wmoR.label+(w.loaded?' · 湿度'+w.humidity+'%':'')+'</div>';
+  if(w.loaded&&w.city)h+='<div class="wx-city" style="color:'+fg3+'">'+esc(w.city)+' · 风'+w.wind+'km/h</div>';
+  h+='</div></div></div>';
+
+  // 用量监控
+  const hasKey=S.mmKey||S.dsKey;
+  if(hasKey){
+    const mmOk=S.mm.ok,dsOk=S.ds.ok;
+    h+='<div class="card"><div class="hdr"><div class="hdr-title">用量监控 <span class="dot '+(mmOk||dsOk?'dot-on':'dot-off')+'"></span></div>';
+    h+='<div><button class="btn-ico" style="color:'+fg2+'" onclick="openCfg()">⚙</button> ';
+    h+='<button class="btn-ico" style="color:'+fg2+';'+(S.syncing?'transform:rotate(360deg);transition:transform .5s':'')+'" onclick="syncAll()" '+ (S.syncing?'disabled':'')+'>↻</button></div></div>';
+    // MiniMax
+    if(S.mmKey){
+      h+='<div style="'+(S.dsKey?'margin-bottom:10px':'')+'">';
+      h+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">';
+      h+='<span class="tag tag-mm" style="'+(dk?'color:#5c8;background:rgba(80,200,120,.15)':'')+'">MiniMax</span>';
+      if(S.mm.err)h+='<span class="err">✗ '+S.mm.err+'</span>';
+      if(mmOk&&!S.mm.err)h+='<span class="sync-info" style="color:'+fg3+'">同步 '+S.mm.sync+'</span>';
+      h+='</div>';
+      if(mmOk&&S.mm.raw?.model_remains){
+        const g=S.mm.raw.model_remains.find(m=>m.model_name==='general')||S.mm.raw.model_remains[0];
+        const h5=100-(g.current_interval_remaining_percent||0),wk=100-(g.current_weekly_remaining_percent||0);
+        [{l:'5h 限额',p:h5,r:fmtMs(g.remains_time)},{l:'周限额',p:wk,r:fmtMs(g.weekly_remains_time)}].forEach(w=>{
+          h+='<div class="bar-label"><b style="color:'+fg+'">'+w.l+' <span style="font-size:9px;font-weight:400;color:'+fg3+'">'+w.r+'后重置</span></b><span class="pct" style="color:'+acc+'">'+Math.round(w.p)+'%</span></div>';
+          h+='<div class="bar-wrap"><div class="bar" style="width:'+w.p+'%;background:'+acc+'"></div></div>';
+        });
+      }
+      h+='</div>';
+    }
+    // DeepSeek
+    if(S.dsKey){
+      h+='<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">';
+      h+='<span class="tag tag-ds" style="'+(dk?'color:#7af;background:rgba(80,140,255,.15)':'')+'">DeepSeek</span>';
+      if(S.ds.err)h+='<span class="err">✗ '+S.ds.err+'</span>';
+      h+='</div>';
+      if(S.ds.ok){
+        h+='<div class="bal-row">';
+        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">总余额</div><div class="bal-val" style="color:'+fg+'">¥'+parseFloat(S.ds.total).toFixed(2)+'</div></div>';
+        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">赠送</div><div class="bal-val-sm" style="color:'+(dk?'#7af':'#36c')+'">¥'+parseFloat(S.ds.granted).toFixed(2)+'</div></div>';
+        h+='<div class="bal-box"><div class="bal-label" style="color:'+fg3+'">充值</div><div class="bal-val-sm" style="color:'+fg2+'">¥'+parseFloat(S.ds.topped).toFixed(2)+'</div></div>';
+        h+='</div>';
+        const st=S.stats.date===today()?S.stats:{calls:0,tokens:0,cost:0};
+        h+='<div class="stats-row" style="color:'+fg2+'"><span>今日 <b style="color:'+fg+'">'+st.calls+'</b> 次调用</span>';
+        if(st.tokens>0)h+='<span>Token <b style="color:'+fg+'">'+(st.tokens>1000?(st.tokens/1000).toFixed(1)+'k':st.tokens)+'</b></span><span>预估 <b style="color:'+(dk?'#7af':'#36c')+'">¥'+st.cost.toFixed(4)+'</b></span>';
+        else h+='<span style="font-size:9px;color:'+fg3+'">AI调用将自动统计Token</span>';
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+
+  // 技术热榜
+  const news=S.news.length?S.news:FALLBACK;
+  h+='<div class="card"><div class="hdr"><div class="hdr-title">技术热榜 <span style="font-size:10px;font-weight:400;color:'+fg2+'">V2EX</span></div>';
+  h+='<button class="btn-ico" style="color:'+fg2+';width:26px;height:26px;border-radius:6px;background:'+(dk?'rgba(255,255,255,.08)':'rgba(0,0,0,.05)')+';font-size:13px'+(S.newsLoading?';transform:rotate(360deg);transition:transform .5s':'')+'" onclick="fetchNews()" '+(S.newsLoading?'disabled':'')+'>↻</button></div>';
+  news.forEach((n,i)=>{
+    const top=i<3;
+    h+='<div class="news-item">';
+    h+='<span class="news-rank'+(top?' top':'')+'" style="background:'+(top?acc:(dk?'rgba(255,255,255,.06)':'rgba(0,0,0,.04)'))+';color:'+(top?'#fff':fg2)+'">'+(i+1)+'</span>';
+    h+='<span class="news-title" style="color:'+fg+'">'+esc(n.title)+'</span>';
+    if(n.node)h+='<span class="news-node" style="color:'+fg3+'">'+esc(n.node)+'</span>';
+    h+='<span class="news-replies" style="color:'+fg2+'">'+n.replies+'回复</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+
+  // 底部栏
+  h+='<div class="bar-row">';
+  h+='<button class="bar-btn" style="color:'+fg+'" onclick="toggleDark()">'+(dk?'☀ 日间':'☾ 夜间')+'</button>';
+  h+='<button class="bar-btn" style="color:'+fg+'" onclick="fetchNews()">↻ 刷新</button>';
+  h+='<button class="bar-btn" style="color:'+fg+'" onclick="openCfg()">⚙ 设置</button>';
+  h+='</div>';
+
+  document.getElementById('app').innerHTML=h;
+  renderModal();
+}
+
+function renderModal(){
+  if(!S.cfgOpen){document.getElementById('modal-root').innerHTML='';return;}
+  const dk=S.dark,fg=dk?'#eee':'#1a1a1a',fg2=dk?'#999':'#666',fg3=dk?'#555':'#bbb';
+  const acc=dk?'hsl(200,70%,65%)':'hsl(200,60%,45%)';
+  let h='<div class="overlay" onclick="if(event.target===this)closeCfg()"><div class="modal">';
+  h+='<div class="modal-hdr"><span class="modal-title" style="color:'+fg+'">API 密钥设置</span>';
+  h+='<button class="modal-close" style="color:'+fg2+'" onclick="closeCfg()">✕</button></div>';
+  // MiniMax
+  h+='<div class="field"><label class="field-label" style="color:'+fg2+'"><span class="tag tag-mm" style="'+(dk?'color:#5c8;background:rgba(80,200,120,.15)':'')+'">MiniMax</span> Token Plan 密钥</label>';
+  h+='<input class="field-input" type="'+(S.showPw?'text':'password')+'" id="mm-input" value="'+esc(document.getElementById('mm-input')?.value||S.mmKey)+'" placeholder="输入 MiniMax 密钥...">';
+  h+='<div class="field-hint" style="color:'+fg3+'">💡 <a href="https://platform.minimaxi.com/user-center/payment/token-plan" style="color:'+acc+'">MiniMax 控制台</a> → Token Plan</div></div>';
+  // DeepSeek
+  h+='<div class="field"><label class="field-label" style="color:'+fg2+'"><span class="tag tag-ds" style="'+(dk?'color:#7af;background:rgba(80,140,255,.15)':'')+'">DeepSeek</span> API 密钥</label>';
+  h+='<input class="field-input" type="'+(S.showPw?'text':'password')+'" id="ds-input" value="'+esc(document.getElementById('ds-input')?.value||S.dsKey)+'" placeholder="输入 DeepSeek 密钥...">';
+  h+='<div class="field-hint" style="color:'+fg3+'">💡 <a href="https://platform.deepseek.com/api_keys" style="color:'+acc+'">DeepSeek 开放平台</a> → API Keys</div></div>';
+  h+='<div style="font-size:10px;color:'+fg3+';margin-bottom:12px">🔒 密钥仅存储在浏览器本地</div>';
+  // QR 配对区
+  h+='<hr class="sec-border">';
+  h+='<div style="text-align:center;margin-bottom:12px">';
+  h+='<div style="font-size:12px;font-weight:600;color:'+fg2+';margin-bottom:8px">📱 手机扫码输入密钥</div>';
+  h+='<div style="display:flex;justify-content:center;align-items:center;gap:16px">';
+  h+='<div id="qr-box" style="border-radius:8px;overflow:hidden;padding:6px;background:'+(dk?'#222':'#fff')+'"></div>';
+  h+='<div style="text-align:left">';
+  h+='<div style="font-size:10px;color:'+fg3+';margin-bottom:4px">配对码</div>';
+  h+='<div id="pair-code" style="font-size:22px;font-weight:800;letter-spacing:3px;color:'+fg+';font-family:monospace">------</div>';
+  h+='<div style="font-size:10px;color:'+fg3+';margin-top:6px;line-height:1.6">手机扫码后<br>在手机上输入密钥<br>Kindle 自动接收</div>';
+  h+='<button onclick="showPairQR()" style="margin-top:8px;padding:5px 12px;border-radius:6px;border:1px solid '+(dk?'#444':'#ddd')+';background:transparent;color:'+fg2+';font-size:11px;cursor:pointer">'+(pairId?'重新生成':'生成二维码')+'</button>';
+  h+='</div></div></div>';
+  h+='<div class="modal-footer">';
+  if(S.mmKey||S.dsKey)h+='<button class="modal-btn" style="border:1px solid #e44;background:transparent;color:#e44" onclick="clearAll()">全部清除</button>';
+  h+='<button class="modal-btn" style="border:1px solid '+(dk?'#333':'#ddd')+';background:transparent;color:'+fg+'" onclick="closeCfg()">取消</button>';
+  h+='<button class="modal-btn" style="background:'+acc+';color:#fff" onclick="saveKeys()">保存并验证</button>';
+  h+='</div></div></div>';
+  document.getElementById('modal-root').innerHTML=h;
+  // 自动生成 QR
+  if(typeof QRCode!=='undefined')showPairQR();
+}
+
+// ── 交互 ──
+function toggleDark(){S.dark=!S.dark;localStorage.setItem('kd-dark',S.dark);render();}
+function openCfg(){S.cfgOpen=true;renderModal();}
+function closeCfg(){S.cfgOpen=false;if(pairPoll){clearInterval(pairPoll);pairPoll=null;pairId=null;}renderModal();}
+function saveKeys(){
+  const mm=document.getElementById('mm-input')?.value?.trim()||'';
+  const ds=document.getElementById('ds-input')?.value?.trim()||'';
+  if(mm){S.mmKey=mm;localStorage.setItem('kd-mm',mm);}
+  if(ds){S.dsKey=ds;localStorage.setItem('kd-ds',ds);}
+  S.cfgOpen=false;render();syncAll();
+}
+function clearAll(){
+  S.mmKey='';S.dsKey='';S.mm={ok:false,sync:'--',err:null,raw:null};S.ds={ok:false,total:'0',granted:'0',topped:'0',err:null};
+  localStorage.removeItem('kd-mm');localStorage.removeItem('kd-ds');
+  S.cfgOpen=false;render();
+}
+
+// ── 配对状态 ──
+let pairId=null,pairPoll=null;
+function getPageUrl(){return location.href.split('?')[0];}
+
+async function showPairQR(){
+  const qrDiv=document.getElementById('qr-box');
+  const codeEl=document.getElementById('pair-code');
+  if(qrDiv)qrDiv.innerHTML='<div style="font-size:11px;padding:40px 10px;text-align:center;color:#999">生成中...</div>';
+  // 生成配对ID
+  const blobId=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+  pairId=blobId;
+  const url=getPageUrl()+'?pair='+pairId;
+  try{
+    // 尝试创建 jsonblob
+    const r=await fetch('https://jsonblob.com/api/jsonBlob',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:'{}'});
+    if(r.ok){
+      const loc=r.headers.get('Location')||'';
+      const realId=loc.split('/').pop();
+      if(realId){pairId=realId;const newUrl=getPageUrl()+'?pair='+pairId;}
+    }
+  }catch{}
+  // 始终显示 QR（即使 jsonblob 失败，QR 仍可扫码打开输入页）
+  const finalUrl=getPageUrl()+'?pair='+pairId;
+  if(qrDiv){qrDiv.innerHTML='';new QRCode(qrDiv,{text:finalUrl,width:140,height:140,colorDark:S.dark?'#eee':'#111',colorLight:S.dark?'#1a1a1a':'#fff',correctLevel:QRCode.CorrectLevel.M});}
+  const short=pairId.slice(-6).toUpperCase();
+  if(codeEl)codeEl.textContent=short;
+  // 开始轮询
+  if(pairPoll)clearInterval(pairPoll);
+  pairPoll=setInterval(pollPair,3000);
+}
+
+async function pollPair(){
+  if(!pairId)return;
+  try{
+    const r=await fetch('https://jsonblob.com/api/jsonBlob/'+pairId);
+    if(!r.ok)return;
+    const d=await r.json();
+    if(d.mm){S.mmKey=d.mm;localStorage.setItem('kd-mm',d.mm);}
+    if(d.ds){S.dsKey=d.ds;localStorage.setItem('kd-ds',d.ds);}
+    if(d.mm||d.ds){
+      clearInterval(pairPoll);pairPoll=null;pairId=null;
+      S.cfgOpen=false;render();syncAll();
+    }
+  }catch{}
+}
+
+// ── 手机端输入模式 ──
+(function(){
+  const params=new URLSearchParams(location.search);
+  const pid=params.get('pair');
+  if(!pid)return;
+  document.body.innerHTML='<div style="max-width:400px;margin:40px auto;padding:20px;font-family:-apple-system,sans-serif">'
+    +'<h2 style="margin-bottom:6px">📱 扫码输入密钥</h2>'
+    +'<p style="color:#666;font-size:13px;margin-bottom:24px">在此输入 API 密钥，Kindle 将自动接收</p>'
+    +'<div style="margin-bottom:16px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#555">'
+    +'<span style="padding:1px 6px;border-radius:4px;background:rgba(80,200,120,.12);font-size:11px;font-weight:700;color:#2a7;margin-right:4px">MiniMax</span>密钥</label>'
+    +'<input id="m-mm" type="text" placeholder="输入 MiniMax 密钥（可留空）" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:monospace;outline:none"></div>'
+    +'<div style="margin-bottom:20px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#555">'
+    +'<span style="padding:1px 6px;border-radius:4px;background:rgba(80,140,255,.12);font-size:11px;font-weight:700;color:#36c;margin-right:4px">DeepSeek</span>密钥</label>'
+    +'<input id="m-ds" type="text" placeholder="输入 DeepSeek 密钥（可留空）" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:monospace;outline:none"></div>'
+    +'<button id="m-send" onclick="sendKeys(\''+pid+'\')" style="width:100%;padding:14px;border-radius:12px;border:none;background:#2563eb;color:#fff;font-size:15px;font-weight:700;cursor:pointer">发送到 Kindle</button>'
+    +'<div id="m-status" style="margin-top:16px;text-align:center;font-size:13px;color:#666"></div></div>';
+})();
+
+async function sendKeys(pid){
+  const mm=document.getElementById('m-mm')?.value?.trim()||'';
+  const ds=document.getElementById('m-ds')?.value?.trim()||'';
+  if(!mm&&!ds){document.getElementById('m-status').innerHTML='<span style="color:#f66">请至少输入一个密钥</span>';return;}
+  const btn=document.getElementById('m-send');btn.disabled=true;btn.textContent='发送中...';
+  try{
+    const r=await fetch('https://jsonblob.com/api/jsonBlob/'+pid,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({mm,ds})});
+    if(r.ok){document.getElementById('m-status').innerHTML='<span style="color:#2a7;font-size:16px;font-weight:700">✓ 发送成功！</span><br><span style="font-size:12px">Kindle 将在几秒内自动接收</span>';}
+    else{document.getElementById('m-status').innerHTML='<span style="color:#f66">发送失败，请重试</span>';btn.disabled=false;btn.textContent='发送到 Kindle';}
+  }catch{document.getElementById('m-status').innerHTML='<span style="color:#f66">网络错误，请重试</span>';btn.disabled=false;btn.textContent='发送到 Kindle';}
+}
+
+// ── 初始化 ──
+// 如果是手机配对模式，不执行主逻辑
+if(!new URLSearchParams(location.search).get('pair')){
+  render();
+  fetchWeather().then(()=>render());
+  fetchNews();
+  if(S.mmKey)syncMM();
+  if(S.dsKey)syncDS();
+  setInterval(()=>render(),1000);
+  setInterval(()=>{if(S.mmKey)syncMM();if(S.dsKey)syncDS();},5*60*1000);
+}
+</script>
+</body>
+</html>
